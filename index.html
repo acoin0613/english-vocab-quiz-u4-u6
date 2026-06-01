@@ -23,12 +23,17 @@
 
     * { box-sizing: border-box; }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
       font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
       background: linear-gradient(180deg, #d4d4d4 0%, #cfcfcf 42%, #737373 100%);
       color: var(--ink);
+      -webkit-font-smoothing: antialiased;
     }
 
     button, select {
@@ -368,6 +373,7 @@
       font-weight: 750;
       font-size: 16px;
       overflow-wrap: anywhere;
+      touch-action: manipulation;
     }
 
     .option.selected {
@@ -415,6 +421,91 @@
     .feedback p {
       margin: 6px 0;
       line-height: 1.65;
+    }
+
+    .translation-view {
+      display: none;
+    }
+
+    .translation-view.show {
+      display: block;
+    }
+
+    .translation-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .translation-title {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .translation-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .translation-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.72);
+      cursor: pointer;
+    }
+
+    .translation-meta {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
+
+    .translation-english {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .mask-box {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid #e8e8e8;
+      background: #fff;
+      padding: 12px;
+      line-height: 1.65;
+      color: #2b2b2b;
+    }
+
+    .mask-box + .mask-box {
+      margin-top: 8px;
+    }
+
+    .translation-card.masked .mask-box > * {
+      filter: blur(6px);
+      user-select: none;
+    }
+
+    .translation-card.masked .mask-box::after {
+      content: "点击显示";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(48,48,48,0.92), rgba(95,95,95,0.86));
+      color: white;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .translation-words {
+      font-size: 13px;
+      color: var(--muted);
     }
 
     .controls-row {
@@ -492,33 +583,207 @@
     }
 
     @media (max-width: 540px) {
+      body {
+        background: linear-gradient(180deg, #d9d9d9 0%, #c9c9c9 52%, #838383 100%);
+      }
       .app {
-        width: min(100% - 20px, 1160px);
-        padding-top: 18px;
+        width: min(100% - 14px, 1160px);
+        padding: 10px 0 calc(18px + env(safe-area-inset-bottom));
       }
       .topbar {
-        min-height: 150px;
+        min-height: 112px;
+        margin-bottom: 8px;
+        align-items: start;
+      }
+      .topbar::before {
+        top: 42%;
+        font-size: 52px;
+        color: rgba(255,255,255,0.32);
+      }
+      h1 {
+        margin-top: 6px;
+        font-size: 31px;
+        line-height: 1.05;
+      }
+      .subtitle {
+        width: min(310px, 100%);
+        margin-inline: auto;
+        font-size: 12px;
+        line-height: 1.4;
       }
       .stats {
         grid-template-columns: repeat(3, 1fr);
+        width: min(300px, 100%);
+        margin-top: 8px;
+        gap: 6px;
       }
       .stat {
-        padding: 9px 8px;
+        min-height: 48px;
+        padding: 7px 8px;
+        border-radius: 12px;
       }
       .stat b {
-        font-size: 18px;
+        font-size: 17px;
       }
       .stat span {
+        margin-top: 3px;
+        font-size: 10px;
+      }
+      .layout {
+        gap: 8px;
+      }
+      .panel {
+        order: 1;
+        padding: 10px;
+        border-radius: 20px;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+      }
+      .quiz-card {
+        order: 2;
+        min-height: auto;
+        border-radius: 20px;
+        padding: 12px;
+        gap: 10px;
+        box-shadow: 0 16px 40px rgba(0,0,0,0.16);
+      }
+      .section-title {
+        margin: 9px 2px 6px;
+        font-size: 10px;
+      }
+      .segmented, .segmented.units, .segmented.parts {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .segmented:first-of-type {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .segmented button {
+        min-height: 38px;
+        padding: 7px 6px;
+        font-size: 13px;
+        text-align: center;
+      }
+      .segmented button::before {
+        width: 7px;
+        height: 7px;
+        margin-right: 5px;
+      }
+      .action, .ghost {
+        min-height: 42px;
+      }
+      .panel .action {
+        margin-top: 10px;
+        min-height: 44px;
+      }
+      .panel .ghost {
+        min-height: 40px;
+      }
+      .pool-line {
+        margin-top: 7px;
+        font-size: 11px;
+        text-align: center;
+      }
+      .meta-row {
+        gap: 8px;
+      }
+      .pill-row {
+        gap: 6px;
+      }
+      .pill {
+        min-height: 26px;
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+      .progress {
+        min-width: 100%;
+        max-width: none;
+      }
+      .progress-track {
+        height: 7px;
+      }
+      .question {
+        font-size: 18px;
+        line-height: 1.5;
+      }
+      .question .blank {
+        min-width: 86px;
+        border-bottom-width: 2px;
+      }
+      .bank {
+        padding: 9px;
+        border-radius: 14px;
+      }
+      .bank-label {
+        margin-bottom: 6px;
         font-size: 11px;
       }
+      .word-list {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        scrollbar-width: none;
+      }
+      .word-list::-webkit-scrollbar {
+        display: none;
+      }
+      .word {
+        flex: 0 0 auto;
+        font-size: 11px;
+        padding: 5px 7px;
+      }
       .options {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .option {
+        min-height: 48px;
+        padding: 8px 6px;
+        font-size: 13px;
+        line-height: 1.2;
+      }
+      .feedback {
+        border-radius: 14px;
+        padding: 10px;
+        font-size: 13px;
+      }
+      .feedback-title {
+        font-size: 15px;
+      }
+      .feedback p {
+        line-height: 1.55;
       }
       .controls-row {
-        flex-direction: column;
+        position: sticky;
+        bottom: calc(8px + env(safe-area-inset-bottom));
+        z-index: 5;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 104px;
+        gap: 8px;
+        margin: 0 -4px -4px;
+        padding: 8px;
+        border-radius: 18px;
+        background: rgba(245,245,245,0.92);
+        border: 1px solid rgba(255,255,255,0.78);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.16);
+        backdrop-filter: blur(14px);
       }
       .controls-row .action, .controls-row .ghost {
         width: 100%;
+        min-width: 0;
+        min-height: 48px;
+        padding-inline: 10px;
+        font-size: 15px;
+      }
+      .summary h2 {
+        font-size: 24px;
+      }
+      .wrong-list {
+        gap: 8px;
+      }
+      .wrong-item {
+        border-radius: 14px;
+        padding: 10px;
+        font-size: 13px;
       }
     }
   </style>
@@ -539,10 +804,18 @@
 
     <section class="layout">
       <aside class="panel">
-        <div class="section-title">练习范围</div>
-        <div class="segmented" role="group" aria-label="练习范围">
-          <button class="active" data-mode="unit">各单元</button>
-          <button data-mode="all">全部题库</button>
+        <div class="section-title">板块</div>
+        <div class="segmented" role="group" aria-label="板块">
+          <button class="active" data-section="quiz">词汇填空</button>
+          <button data-section="translate">翻译背诵</button>
+        </div>
+
+        <div id="rangeControls">
+          <div class="section-title">练习范围</div>
+          <div class="segmented" role="group" aria-label="练习范围">
+            <button class="active" data-mode="unit">各单元</button>
+            <button data-mode="all">全部题库</button>
+          </div>
         </div>
 
         <div id="unitControls">
@@ -554,11 +827,13 @@
           </div>
         </div>
 
-        <div class="section-title">题型</div>
-        <div class="segmented parts" role="group" aria-label="题型">
-          <button class="active" data-part="all">全部</button>
-          <button data-part="Part 1">Part 1</button>
-          <button data-part="Part 2">Part 2</button>
+        <div id="partControls">
+          <div class="section-title">题型</div>
+          <div class="segmented parts" role="group" aria-label="题型">
+            <button class="active" data-part="all">全部</button>
+            <button data-part="Part 1">Part 1</button>
+            <button data-part="Part 2">Part 2</button>
+          </div>
         </div>
 
         <button id="startBtn" class="action">重新随机</button>
@@ -608,6 +883,14 @@
             <button id="reviewWrongBtn" class="ghost hidden">重练错题</button>
           </div>
         </div>
+
+        <div id="translationView" class="translation-view">
+          <div class="translation-toolbar">
+            <h2 class="translation-title">翻译背诵</h2>
+            <button id="maskAllBtn" class="ghost">全部遮住</button>
+          </div>
+          <div id="translationList" class="translation-list"></div>
+        </div>
       </section>
     </section>
   </main>
@@ -615,7 +898,8 @@
   <script id="quiz-data" type="application/json">{
   "sourceFiles": {
     "questions": "读写U4-U6_原题文字版.docx",
-    "answers": "读写U4-U6_重新排版版.docx"
+    "answers": "读写U4-U6_重新排版版.docx",
+    "translation": "U4-U6翻译_附单词释义.docx"
   },
   "total": 45,
   "questions": [
@@ -1882,11 +2166,214 @@
         "autonomous"
       ]
     }
+  ],
+  "translationNotes": [
+    {
+      "id": "U4-T1",
+      "unit": "U4",
+      "number": 1,
+      "english": "Some experts say that globalization and increasing automation have led to a decline in manufacturing levels in some corners of the world.",
+      "chinese": "一些专家说，全球化和日益提高的自动化程度已导致世界上一些地区制造业水平下滑。",
+      "words": "experts＝专家；globalization＝全球化；automation＝自动化；decline＝下降；manufacturing＝制造业；corners＝地区；角落。"
+    },
+    {
+      "id": "U4-T2",
+      "unit": "U4",
+      "number": 2,
+      "english": "The fallout of economic restructuring is far-reaching, but in particular it has impacted employees who were made redundant.",
+      "chinese": "经济重组所带来的影响很深远，但对失业人员的影响更甚。",
+      "words": "fallout＝后果；影响；economic＝经济的；restructuring＝重组；far-reaching＝深远的；impacted＝影响；redundant＝被裁减的；失业的。"
+    },
+    {
+      "id": "U4-T3",
+      "unit": "U4",
+      "number": 3,
+      "english": "In the context of urbanization, the revitalization of industrial areas refers to the adaptive use of territories, buildings, and complexes when changing their functional purpose and further use.",
+      "chinese": "在城市化的背景下，工业区振兴是指对土地、建筑物和综合楼群的使用做适应性调整以改变其功能并进一步使用。",
+      "words": "context＝背景；语境；urbanization＝城市化；revitalization＝振兴；industrial＝工业的；adaptive＝适应性的；territories＝土地；区域；complexes＝综合楼群；functional＝功能的。"
+    },
+    {
+      "id": "U4-T4",
+      "unit": "U4",
+      "number": 4,
+      "english": "Improved healthcare quality and population aging together generate a booming population of older adult cancer survivors, many of whom have multiple complex health conditions.",
+      "chinese": "医疗质量的提高和人口老龄化使老年癌症患者的幸存人数激增，其中许多人有多种复杂的健康问题。",
+      "words": "healthcare＝医疗保健；quality＝质量；aging＝老龄化；generate＝产生；booming＝激增的；survivors＝幸存者；complex＝复杂的；conditions＝状况；疾病。"
+    },
+    {
+      "id": "U4-T5",
+      "unit": "U4",
+      "number": 5,
+      "english": "Researchers conducted a trial at 10 hospitals to assess the long-term efficacy of acupuncture for chronic pain syndrome.",
+      "chinese": "研究人员在10家医院进行了一项试验，以评估针灸治疗慢性疼痛综合征的长期疗效。",
+      "words": "researchers＝研究人员；conducted＝进行；trial＝试验；assess＝评估；long-term＝长期的；efficacy＝疗效；acupuncture＝针灸；chronic＝慢性的；syndrome＝综合征。"
+    },
+    {
+      "id": "U4-T6",
+      "unit": "U4",
+      "number": 6,
+      "english": "More money will be packed into the future self-driving cars, making semiconductors (半导体) a growth opportunity in a car industry struggling with stagnant sales.",
+      "chinese": "更多资金将涌入未来自动驾驶汽车的研发中，使半导体成为汽车行业的增长机会，这个行业目前正因停滞的销量而苦苦挣扎。",
+      "words": "packed＝涌入；投入；self-driving＝自动驾驶的；semiconductors＝半导体；growth＝增长；opportunity＝机会；industry＝行业；struggling＝苦苦挣扎的；stagnant＝停滞的。"
+    },
+    {
+      "id": "U4-T7",
+      "unit": "U4",
+      "number": 7,
+      "english": "Professors can create a template and have all students use the same template so that all assignments have a consistent appearance.",
+      "chinese": "教授可以创建一个让所有学生使用的模板，这样所有的作业都能保持一致的样式。",
+      "words": "professors＝教授；create＝创建；template＝模板；assignments＝作业；consistent＝一致的；appearance＝样式；外观。"
+    },
+    {
+      "id": "U4-T8",
+      "unit": "U4",
+      "number": 8,
+      "english": "The world will experience a record drop in greenhouse gas emissions this year, but it will be barely perceptible in the atmosphere, according to an analysis recently released.",
+      "chinese": "根据近期发布的一项分析，今年全球温室气体排放量将出现创纪录的下降，但从大气中几乎察觉不到。",
+      "words": "experience＝经历；record＝创纪录的；greenhouse＝温室的；emissions＝排放；barely＝几乎不；perceptible＝可察觉的；atmosphere＝大气；analysis＝分析；released＝发布的。"
+    },
+    {
+      "id": "U4-T9",
+      "unit": "U4",
+      "number": 9,
+      "english": "In all of these studies, this linked-health phenomenon was frequently found in couples who were genetically dissimilar, coinciding with what has been found in many other previous studies.",
+      "chinese": "在所有这些研究中，经常发现在基因不同的夫妇身上出现了这种健康关联的现象，这与之前许多其他研究的发现是一致的。",
+      "words": "studies＝研究；linked-health＝健康关联的；phenomenon＝现象；frequently＝经常地；couples＝夫妇；genetically＝基因上；dissimilar＝不同的；coinciding＝一致；同时发生；previous＝之前的。"
+    },
+    {
+      "id": "U5-T1",
+      "unit": "U5",
+      "number": 1,
+      "english": "By diverting agricultural and forestry waste from landfills to biomass power plants, we save space and can dedicate landfill technologies to dealing with the more problematic waste that we have right now.",
+      "chinese": "通过将农业和林业垃圾从垃圾填埋场转移到生物质发电厂，我们既能节约空间，又能将垃圾填埋技术专门用于那些眼下更难处理的废弃物。",
+      "words": "diverting＝转移；agricultural＝农业的；forestry＝林业的；waste＝垃圾；废弃物；landfills＝垃圾填埋场；biomass＝生物质；dedicate＝专门用于；problematic＝难处理的。"
+    },
+    {
+      "id": "U5-T2",
+      "unit": "U5",
+      "number": 2,
+      "english": "Biomass has often been regarded as a promising renewable resource to meet energy demand and mitigate climate change.",
+      "chinese": "生物质往往被认为是一种具有未来发展前景的可再生资源，可以满足能源需求并缓解气候变化。",
+      "words": "biomass＝生物质；regarded＝被认为；promising＝有前景的；renewable＝可再生的；resource＝资源；demand＝需求；mitigate＝缓解；climate＝气候。"
+    },
+    {
+      "id": "U5-T3",
+      "unit": "U5",
+      "number": 3,
+      "english": "Combustion technologies convert biomass fuels into several forms of useful energy for commercial or industrial uses: hot air, hot water, steam and electricity.",
+      "chinese": "燃烧技术将生物质燃料转化为几种可用于商业或工业的有用能源形式：热空气、热水、蒸汽和电力。",
+      "words": "combustion＝燃烧；technologies＝技术；convert＝转化；fuels＝燃料；forms＝形式；commercial＝商业的；industrial＝工业的；steam＝蒸汽；electricity＝电力。"
+    },
+    {
+      "id": "U5-T4",
+      "unit": "U5",
+      "number": 4,
+      "english": "Uncontrolled biomass burning damages the landscape, degrades regional air quality, and acts as a disproportionately large source of greenhouse gas emissions.",
+      "chinese": "无节制的生物质焚烧会破坏景观，降低区域空气质量，形成一个过大的温室气体排放源。",
+      "words": "uncontrolled＝无节制的；burning＝焚烧；damages＝破坏；landscape＝景观；degrades＝降低；使恶化；regional＝区域的；disproportionately＝不成比例地；过大地；emissions＝排放。"
+    },
+    {
+      "id": "U5-T5",
+      "unit": "U5",
+      "number": 5,
+      "english": "The biggest objections to fracking are related to the destruction of the environment, the air and water pollution that results from escaping natural gas and the cocktail (混合物) of fracking fluids that leaches into the groundwater.",
+      "chinese": "反对水力压裂法的最大理由是，它破坏环境——其泄漏的天然气和渗入地下水的压裂液混合物会造成空气污染和水污染。",
+      "words": "objections＝反对理由；fracking＝水力压裂法；destruction＝破坏；pollution＝污染；escaping＝泄漏的；cocktail＝混合物；fluids＝液体；leaches＝渗入；groundwater＝地下水。"
+    },
+    {
+      "id": "U5-T6",
+      "unit": "U5",
+      "number": 6,
+      "english": "There have been intense disputes between those who see hydraulic fracturing as an economic benefit and those who assert it will jeopardize health and the environment.",
+      "chinese": "一些人认为采用水力压裂法会带来经济效益，另一些人则认为它会危害健康和环境，持这两种观点的人之间一直存在激烈的争论。",
+      "words": "intense＝激烈的；disputes＝争论；hydraulic＝水力的；fracturing＝压裂；benefit＝效益；assert＝断言；认为；jeopardize＝危害；environment＝环境。"
+    },
+    {
+      "id": "U5-T7",
+      "unit": "U5",
+      "number": 7,
+      "english": "Biogas (沼气) collected from landfill, wastewater and agricultural waste can be processed and injected into the existing gas network to be used as a clean, reliable energy source for homes, businesses and electric generation.",
+      "chinese": "从废弃物填埋场、废水和农业废弃物等回收的沼气可以进行处理，并注入现有的天然气网络，作为清洁、可靠的能源供家庭、企业及发电使用。",
+      "words": "biogas＝沼气；collected＝回收的；landfill＝填埋场；wastewater＝废水；processed＝处理；injected＝注入；existing＝现有的；network＝网络；reliable＝可靠的；generation＝发电。"
+    },
+    {
+      "id": "U5-T8",
+      "unit": "U5",
+      "number": 8,
+      "english": "Affordability and cost-effectiveness of each renewable energy resource is very much dependent upon a given local context, and therein lies the challenge of developing energy systems that are cost-effective and affordable while sufficiently manages the technical limitations of each renewable energy resource.",
+      "chinese": "每种可再生能源的可负担性和成本效益在很大程度上取决于当地特定的环境，这就是开发能源系统的挑战所在：要在能充分应对每种可再生能源的技术局限性的同时，使能源系统具有成本效益且人们能负担得起。",
+      "words": "affordability＝可负担性；cost-effectiveness＝成本效益；renewable＝可再生的；dependent＝取决于；context＝环境；背景；therein＝在其中；challenge＝挑战；limitations＝局限性；sufficiently＝充分地。"
+    },
+    {
+      "id": "U6-T1",
+      "unit": "U6",
+      "number": 1,
+      "english": "The study examines the relationship between the concept of groupthink and the variables of highly cohesive groups, concurrence-seeking, and promotional leadership.",
+      "chinese": "该研究探讨了群体思维概念与高凝聚力群体、寻求一致性、促进型领导力等变量之间的关系。",
+      "words": "examines＝探讨；检查；relationship＝关系；concept＝概念；groupthink＝群体思维；variables＝变量；cohesive＝有凝聚力的；concurrence-seeking＝寻求一致性；promotional＝促进型的；leadership＝领导力。"
+    },
+    {
+      "id": "U6-T2",
+      "unit": "U6",
+      "number": 2,
+      "english": "In business settings, managers must be wary of groupthink, or the tendency of cohesive groups to become so concerned about group solidarity that they fail to critically and realistically evaluate their assumptions and decisions.",
+      "chinese": "在商业环境中，管理者必须警惕群体思维或者下面这种倾向：有凝聚力的群体因过于在乎内部团结而不能批判性地、实事求是地评估自己的设想和决策。",
+      "words": "settings＝环境；managers＝管理者；wary＝警惕的；tendency＝倾向；cohesive＝有凝聚力的；solidarity＝团结；critically＝批判性地；realistically＝实事求是地；assumptions＝设想；decisions＝决策。"
+    },
+    {
+      "id": "U6-T3",
+      "unit": "U6",
+      "number": 3,
+      "english": "With the help of big data technologies, the executives in that enterprise could make an informed judgment on pricing, based on the best estimates of both chance and error.",
+      "chinese": "在大数据技术的帮助下，该企业的主管可以依据对机会和错误的最佳估计，做出明智的定价判断。",
+      "words": "executives＝主管；高管；enterprise＝企业；informed＝明智的；有依据的；judgment＝判断；pricing＝定价；estimates＝估计；chance＝机会；error＝错误。"
+    },
+    {
+      "id": "U6-T4",
+      "unit": "U6",
+      "number": 4,
+      "english": "Some top executives are more committed to the status quo, particularly to their organization's current strategy and leadership profile.",
+      "chinese": "一些高层管理者更致力于维持现状，特别是维持其所在机构的现有战略和领导形象。",
+      "words": "executives＝高管；committed＝致力于的；status quo＝现状；particularly＝特别是；organization＝机构；组织；strategy＝战略；leadership＝领导；profile＝形象；特征。"
+    },
+    {
+      "id": "U6-T5",
+      "unit": "U6",
+      "number": 5,
+      "english": "Despite an intensely competitive environment, the company managed to navigate through the current uncertainty and outperform its peers by fully taking advantage of big data.",
+      "chinese": "尽管竞争激烈，该公司仍通过充分利用大数据，成功应对了当前的不确定性，业绩表现胜过同行。",
+      "words": "despite＝尽管；intensely＝强烈地；competitive＝竞争的；managed＝成功做到；navigate＝应对；穿越；uncertainty＝不确定性；outperform＝胜过；peers＝同行；advantage＝优势。"
+    },
+    {
+      "id": "U6-T6",
+      "unit": "U6",
+      "number": 6,
+      "english": "Through a collection of insiders' \"practice stories,\" the accounts of experienced facilitative leaders working on public disputes, we see complexity and conflict, assertiveness and empathy, interests and values, all woven together.",
+      "chinese": "通过收集内部人士的“实践故事”，即经验丰富的促进型领导者讲述如何处理公共争端，我们发现复杂和冲突、果断和同情、利益和价值全都交织在一起。",
+      "words": "collection＝收集；insiders＝内部人士；accounts＝叙述；experienced＝经验丰富的；facilitative＝促进型的；public＝公共的；disputes＝争端；complexity＝复杂性；assertiveness＝果断；empathy＝同情；共情；woven＝交织。"
+    },
+    {
+      "id": "U6-T7",
+      "unit": "U6",
+      "number": 7,
+      "english": "It is unsurprising that a cohesive team optimizes its performance by open channels of communication throughout a project, and that conflict avoidance may actually hinder the progress of a group.",
+      "chinese": "在整个项目中，有凝聚力的团队通过开放的沟通渠道达到最优业绩，而避免冲突实际上可能会阻碍团队进步，这并不令人惊讶。",
+      "words": "unsurprising＝不令人惊讶的；cohesive＝有凝聚力的；optimizes＝优化；performance＝表现；业绩；channels＝渠道；communication＝沟通；throughout＝贯穿；conflict＝冲突；avoidance＝避免；hinder＝阻碍；progress＝进步。"
+    },
+    {
+      "id": "U6-T8",
+      "unit": "U6",
+      "number": 8,
+      "english": "New research finds that a diverse group can often outperform a group of the best, because its diversity triggers more careful information processing that is absent in homogeneous (同类组成的) groups.",
+      "chinese": "新研究发现，一个多元化的团队往往可以胜过一个由最优秀的人组成的团队，原因是多元化使得信息处理更为周密，而这在同质化的团队中是不存在的。",
+      "words": "diverse＝多元化的；outperform＝胜过；diversity＝多元化；triggers＝触发；引发；careful＝周密的；processing＝处理；absent＝缺失的；不存在的；homogeneous＝同质的。"
+    }
   ]
 }</script>
   <script>
     const DATA = JSON.parse(document.getElementById('quiz-data').textContent);
     const state = {
+      section: 'quiz',
       mode: 'unit',
       unit: 'U4',
       part: 'all',
@@ -1898,14 +2385,17 @@
       selectedAnswer: '',
       wrong: [],
       optionPool: [],
-      currentOptions: []
+      currentOptions: [],
+      revealAll: false
     };
 
     const els = {
       doneCount: document.getElementById('doneCount'),
       rightCount: document.getElementById('rightCount'),
       accuracy: document.getElementById('accuracy'),
+      rangeControls: document.getElementById('rangeControls'),
       unitControls: document.getElementById('unitControls'),
+      partControls: document.getElementById('partControls'),
       poolInfo: document.getElementById('poolInfo'),
       startBtn: document.getElementById('startBtn'),
       wrongOnlyBtn: document.getElementById('wrongOnlyBtn'),
@@ -1926,7 +2416,10 @@
       summaryText: document.getElementById('summaryText'),
       wrongList: document.getElementById('wrongList'),
       againBtn: document.getElementById('againBtn'),
-      reviewWrongBtn: document.getElementById('reviewWrongBtn')
+      reviewWrongBtn: document.getElementById('reviewWrongBtn'),
+      translationView: document.getElementById('translationView'),
+      translationList: document.getElementById('translationList'),
+      maskAllBtn: document.getElementById('maskAllBtn')
     };
 
     function shuffle(items) {
@@ -1946,6 +2439,10 @@
       });
     }
 
+    function getTranslationPool() {
+      return DATA.translationNotes.filter(item => item.unit === state.unit);
+    }
+
     function setActive(groupSelector, attr, value) {
       document.querySelectorAll(groupSelector).forEach(button => {
         button.classList.toggle('active', button.dataset[attr] === value);
@@ -1953,11 +2450,31 @@
     }
 
     function updatePoolInfo() {
-      const count = getPool().length;
-      const range = state.mode === 'all' ? '全部题库' : state.unit;
-      const part = state.part === 'all' ? '全部题型' : state.part;
-      els.poolInfo.textContent = `当前范围：${range} · ${part} · ${count} 题`;
-      els.unitControls.classList.toggle('hidden', state.mode === 'all');
+      const count = state.section === 'translate' ? getTranslationPool().length : getPool().length;
+      const range = state.section === 'translate' ? state.unit : (state.mode === 'all' ? '全部题库' : state.unit);
+      const part = state.section === 'translate' ? '翻译背诵' : (state.part === 'all' ? '全部题型' : state.part);
+      els.poolInfo.textContent = `当前范围：${range} · ${part} · ${count} 条`;
+      els.rangeControls.classList.toggle('hidden', state.section === 'translate');
+      els.unitControls.classList.toggle('hidden', state.section !== 'translate' && state.mode === 'all');
+      els.partControls.classList.toggle('hidden', state.section === 'translate');
+    }
+
+    function setSection(section) {
+      state.section = section;
+      if (section === 'translate') {
+        state.mode = 'unit';
+        setActive('[data-mode]', 'mode', state.mode);
+      }
+      setActive('[data-section]', 'section', section);
+      els.quizView.classList.toggle('hidden', section !== 'quiz');
+      els.summaryView.classList.remove('show');
+      els.translationView.classList.toggle('show', section === 'translate');
+      updatePoolInfo();
+      if (section === 'translate') {
+        renderTranslation();
+      } else {
+        startRound();
+      }
     }
 
     function startRound(customPool = null) {
@@ -2095,6 +2612,31 @@
       els.wrongOnlyBtn.classList.toggle('hidden', state.wrong.length === 0);
     }
 
+    function renderTranslation() {
+      const items = getTranslationPool();
+      els.translationList.innerHTML = items.map(item => `
+        <article class="translation-card ${state.revealAll ? '' : 'masked'}" data-id="${escapeAttr(item.id)}">
+          <div class="translation-meta">
+            <span class="pill">${escapeHtml(item.unit)}</span>
+            <span class="pill">第 ${item.number} 句</span>
+          </div>
+          <p class="translation-english">${escapeHtml(item.english)}</p>
+          <div class="mask-box"><p>${escapeHtml(item.chinese)}</p></div>
+          <div class="mask-box translation-words"><p>${escapeHtml(item.words)}</p></div>
+        </article>
+      `).join('');
+      els.maskAllBtn.textContent = state.revealAll ? '全部遮住' : '全部显示';
+    }
+
+    function toggleTranslationCard(card) {
+      card.classList.toggle('masked');
+    }
+
+    function toggleAllMasks() {
+      state.revealAll = !state.revealAll;
+      renderTranslation();
+    }
+
     function escapeHtml(value) {
       return String(value)
         .replaceAll('&', '&amp;')
@@ -2112,12 +2654,17 @@
       return [...new Set(items)];
     }
 
+    document.querySelectorAll('[data-section]').forEach(button => {
+      button.addEventListener('click', () => setSection(button.dataset.section));
+    });
+
     document.querySelectorAll('[data-mode]').forEach(button => {
       button.addEventListener('click', () => {
         state.mode = button.dataset.mode;
         setActive('[data-mode]', 'mode', state.mode);
         updatePoolInfo();
-        startRound();
+        if (state.section === 'translate') renderTranslation();
+        else startRound();
       });
     });
 
@@ -2126,7 +2673,8 @@
         state.unit = button.dataset.unit;
         setActive('[data-unit]', 'unit', state.unit);
         updatePoolInfo();
-        startRound();
+        if (state.section === 'translate') renderTranslation();
+        else startRound();
       });
     });
 
@@ -2135,7 +2683,8 @@
         state.part = button.dataset.part;
         setActive('[data-part]', 'part', state.part);
         updatePoolInfo();
-        startRound();
+        if (state.section === 'translate') renderTranslation();
+        else startRound();
       });
     });
 
@@ -2149,6 +2698,11 @@
       const button = event.target.closest('.option');
       if (button) selectAnswer(button.dataset.answer);
     });
+    els.translationList.addEventListener('click', event => {
+      const card = event.target.closest('.translation-card');
+      if (card) toggleTranslationCard(card);
+    });
+    els.maskAllBtn.addEventListener('click', toggleAllMasks);
 
     document.addEventListener('keydown', event => {
       if (/^[1-9]$/.test(event.key) && !state.answered) {
