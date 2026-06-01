@@ -1,0 +1,2166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>英语词汇选择练习 U4-U6</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #cfcfcf;
+      --ink: #202020;
+      --muted: #777777;
+      --line: #e2e2e2;
+      --panel: #ffffff;
+      --accent: #e36a4a;
+      --accent-dark: #b94d34;
+      --dark: #303030;
+      --dark-2: #505050;
+      --green: #27805a;
+      --red: #c54b3f;
+      --shadow: 0 28px 70px rgba(0, 0, 0, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+      background: linear-gradient(180deg, #d4d4d4 0%, #cfcfcf 42%, #737373 100%);
+      color: var(--ink);
+    }
+
+    button, select {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 44px 0 48px;
+    }
+
+    .topbar {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 190px;
+      text-align: center;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 10px;
+      font-size: clamp(38px, 7vw, 78px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .topbar::before {
+      content: "VOCAB QUIZ";
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      color: rgba(255, 255, 255, 0.34);
+      font-size: clamp(64px, 13vw, 138px);
+      font-weight: 900;
+      line-height: 0.9;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .subtitle {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      color: rgba(32, 32, 32, 0.64);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(76px, 1fr));
+      gap: 8px;
+      width: min(360px, 100%);
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat {
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 8px;
+      padding: 10px 12px;
+      min-height: 58px;
+      backdrop-filter: blur(14px);
+    }
+
+    .stat b {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 176px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel, .quiz-card {
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      min-height: 640px;
+      padding: 20px 16px;
+      position: sticky;
+      top: 16px;
+      background: linear-gradient(160deg, #555 0%, #2d2d2d 55%, #262626 100%);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #f3f3f3;
+    }
+
+    .section-title {
+      margin: 22px 0 9px;
+      font-weight: 700;
+      font-size: 12px;
+      color: rgba(255,255,255,0.62);
+      text-transform: uppercase;
+    }
+
+    .section-title:first-child { margin-top: 0; }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .segmented.units {
+      grid-template-columns: 1fr;
+    }
+
+    .segmented.parts {
+      grid-template-columns: 1fr;
+    }
+
+    .segmented button, .action, .option, .ghost {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 999px;
+      min-height: 42px;
+      padding: 9px 10px;
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .segmented button:hover, .action:hover, .option:hover, .ghost:hover {
+      transform: translateY(-1px);
+      border-color: var(--accent);
+    }
+
+    .segmented button.active {
+      background: #f5f5f5;
+      border-color: #fff;
+      color: #151515;
+    }
+
+    .segmented button {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.78);
+      text-align: left;
+      padding-left: 14px;
+    }
+
+    .segmented button::before {
+      content: "";
+      display: inline-block;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: rgba(255,255,255,0.42);
+      vertical-align: 1px;
+    }
+
+    .segmented button.active::before {
+      background: var(--accent);
+      box-shadow: 0 0 0 7px rgba(227, 106, 74, 0.14);
+    }
+
+    .action {
+      width: 100%;
+      margin-top: 16px;
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(227, 106, 74, 0.24);
+    }
+
+    .ghost {
+      background: rgba(255,255,255,0.08);
+      width: 100%;
+      margin-top: 8px;
+      color: rgba(255,255,255,0.86);
+      font-weight: 700;
+    }
+
+    .action:disabled {
+      background: #dfdfdf;
+      border-color: #dfdfdf;
+      color: #8c8c8c;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .quiz-card .ghost {
+      background: rgba(255,255,255,0.72);
+      color: #555;
+      border-color: #e1e1e1;
+    }
+
+    .quiz-card .ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent-dark);
+    }
+
+    .pool-line {
+      margin: 12px 0 0;
+      color: rgba(255,255,255,0.58);
+      line-height: 1.55;
+      font-size: 13px;
+    }
+
+    .quiz-card {
+      min-height: 640px;
+      padding: clamp(18px, 4vw, 30px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: linear-gradient(135deg, #ffffff 0%, #f3f3f3 62%, #e7e7e7 100%);
+      border: 1px solid rgba(255,255,255,0.82);
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: #eef4f2;
+      color: #333;
+      border: 1px solid #e2e2e2;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .progress {
+      min-width: 180px;
+      flex: 1;
+      max-width: 360px;
+    }
+
+    .progress-track {
+      height: 10px;
+      background: #e1e1e1;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #2d2d2d);
+      transition: width 0.2s ease;
+    }
+
+    .question {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 31px);
+      line-height: 1.42;
+      letter-spacing: 0;
+    }
+
+    .question .blank {
+      display: inline-block;
+      min-width: 128px;
+      border-bottom: 3px solid var(--accent);
+      color: var(--accent);
+      text-align: center;
+      padding: 0 8px 2px;
+      font-weight: 800;
+    }
+
+    .bank {
+      border: 1px solid #ececec;
+      background: rgba(255,255,255,0.68);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .bank-label {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .word-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .word {
+      padding: 5px 8px;
+      border-radius: 6px;
+      background: #eef1ef;
+      color: #243037;
+      font-size: 13px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .option {
+      min-height: 54px;
+      font-weight: 750;
+      font-size: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .option.selected {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 2px rgba(227, 106, 74, 0.28), 0 10px 22px rgba(227, 106, 74, 0.12);
+      color: var(--accent-dark);
+    }
+
+    .option.correct {
+      background: #e6f4ec;
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .option.wrong {
+      background: #fbebe8;
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .option:disabled {
+      cursor: default;
+      transform: none;
+      opacity: 0.88;
+    }
+
+    .feedback {
+      display: none;
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: #fbfcfb;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.good { border-color: #a7d9bd; background: #f0faf4; }
+    .feedback.bad { border-color: #edb5ad; background: #fff4f2; }
+
+    .feedback-title {
+      margin: 0 0 8px;
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .feedback p {
+      margin: 6px 0;
+      line-height: 1.65;
+    }
+
+    .controls-row {
+      display: flex;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .controls-row .action, .controls-row .ghost {
+      margin-top: 0;
+      width: auto;
+      min-width: 140px;
+      padding-inline: 16px;
+    }
+
+    .summary {
+      display: none;
+    }
+
+    .summary.show {
+      display: block;
+    }
+
+    .summary h2 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .wrong-list {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .wrong-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfcfb;
+    }
+
+    .wrong-item b { color: var(--red); }
+    .hidden { display: none !important; }
+
+    @media (max-width: 860px) {
+      .topbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .panel {
+        position: static;
+        min-height: auto;
+        order: 2;
+      }
+      .quiz-card {
+        order: 1;
+      }
+      .segmented, .segmented.units, .segmented.parts {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .segmented:first-of-type {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .segmented button {
+        text-align: center;
+        padding-left: 10px;
+      }
+      .options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 540px) {
+      .app {
+        width: min(100% - 20px, 1160px);
+        padding-top: 18px;
+      }
+      .topbar {
+        min-height: 150px;
+      }
+      .stats {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .stat {
+        padding: 9px 8px;
+      }
+      .stat b {
+        font-size: 18px;
+      }
+      .stat span {
+        font-size: 11px;
+      }
+      .options {
+        grid-template-columns: 1fr;
+      }
+      .controls-row {
+        flex-direction: column;
+      }
+      .controls-row .action, .controls-row .ghost {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <h1>英语词汇选择练习 U4-U6</h1>
+        <p class="subtitle">随机打乱题目顺序，选择答案后立即判断，并显示正确答案与中文翻译。</p>
+      </div>
+      <div class="stats" aria-label="练习统计">
+        <div class="stat"><b id="doneCount">0</b><span>已答</span></div>
+        <div class="stat"><b id="rightCount">0</b><span>正确</span></div>
+        <div class="stat"><b id="accuracy">0%</b><span>正确率</span></div>
+      </div>
+    </header>
+
+    <section class="layout">
+      <aside class="panel">
+        <div class="section-title">练习范围</div>
+        <div class="segmented" role="group" aria-label="练习范围">
+          <button class="active" data-mode="unit">各单元</button>
+          <button data-mode="all">全部题库</button>
+        </div>
+
+        <div id="unitControls">
+          <div class="section-title">单元</div>
+          <div class="segmented units" role="group" aria-label="单元">
+            <button class="active" data-unit="U4">U4</button>
+            <button data-unit="U5">U5</button>
+            <button data-unit="U6">U6</button>
+          </div>
+        </div>
+
+        <div class="section-title">题型</div>
+        <div class="segmented parts" role="group" aria-label="题型">
+          <button class="active" data-part="all">全部</button>
+          <button data-part="Part 1">Part 1</button>
+          <button data-part="Part 2">Part 2</button>
+        </div>
+
+        <button id="startBtn" class="action">重新随机</button>
+        <button id="wrongOnlyBtn" class="ghost hidden">只练错题</button>
+        <p class="pool-line" id="poolInfo"></p>
+      </aside>
+
+      <section class="quiz-card" aria-live="polite">
+        <div id="quizView">
+          <div class="meta-row">
+            <div class="pill-row">
+              <span class="pill" id="sourcePill">U4 · Part 1</span>
+              <span class="pill" id="indexPill">第 1 题</span>
+            </div>
+            <div class="progress" aria-hidden="true">
+              <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+          </div>
+
+          <p class="question" id="questionText"></p>
+
+          <div class="bank">
+            <p class="bank-label">原词库</p>
+            <div class="word-list" id="wordBank"></div>
+          </div>
+
+          <div class="options" id="options"></div>
+
+          <div class="feedback" id="feedback">
+            <p class="feedback-title" id="feedbackTitle"></p>
+            <p id="answerLine"></p>
+            <p id="translationLine"></p>
+          </div>
+
+          <div class="controls-row">
+            <button id="nextBtn" class="action" disabled>下一题</button>
+            <button id="skipBtn" class="ghost">跳过</button>
+          </div>
+        </div>
+
+        <div id="summaryView" class="summary">
+          <h2>本轮完成</h2>
+          <p id="summaryText" class="subtitle"></p>
+          <div id="wrongList" class="wrong-list"></div>
+          <div class="controls-row">
+            <button id="againBtn" class="action">再来一轮</button>
+            <button id="reviewWrongBtn" class="ghost hidden">重练错题</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script id="quiz-data" type="application/json">{
+  "sourceFiles": {
+    "questions": "读写U4-U6_原题文字版.docx",
+    "answers": "读写U4-U6_重新排版版.docx"
+  },
+  "total": 45,
+  "questions": [
+    {
+      "id": "U4-Part1-1",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 1,
+      "prompt": "Stepping back and letting kids solve problems on their own can hone (提高) their executive function skills, and help to ______ a strong sense of self-agency and confidence.",
+      "answer": "instill",
+      "translation": "适当放手，让孩子自己解决问题，既能锻炼他们的执行功能技能，也有助于为他们灌输强烈的自主意识与自信心。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part1-2",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 2,
+      "prompt": "What gets in, what stays out and what gets in but in the wrong place are ______ issues to consider when editors review reference books.",
+      "answer": "staple",
+      "translation": "哪些内容收录、哪些排除、哪些内容虽被收录却放错了位置，是编辑审阅参考书时需要考虑的核心问题。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part1-3",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 3,
+      "prompt": "Ideally, the government can ______ inflation by raising the level of output and taking out the excess money in circulation in the economy.",
+      "answer": "curtail",
+      "translation": "理想情况下，政府可以通过提高产出水平、回笼经济中流通的过剩货币来抑制通货膨胀。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part1-4",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 4,
+      "prompt": "More money is ______ to fund farmers amid a surge in the prices of seeds and fertilizers in spring.",
+      "answer": "allocate",
+      "translation": "春季种子和化肥价格大幅上涨，更多资金被拨付用于扶持农民。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part1-5",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 5,
+      "prompt": "Businesses that ______ older workers could face a labor and skill shortage as there are too few younger candidates to replace them.",
+      "answer": "disregard",
+      "translation": "忽视年长员工的企业可能会面临劳动力和技能短缺的问题，因为能接替他们的年轻候选人数量过少。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part1-6",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 6,
+      "prompt": "In the case of a new medicine, testing for both safety and ______ is required before it can be introduced to clinical practice.",
+      "answer": "efficacy",
+      "translation": "对于新药而言，在投入临床应用前，必须同时测试其安全性与有效性。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part1-7",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 7,
+      "prompt": "Health and safety experts were called in over fears that the old office building could collapse and ______ surrounding buildings.",
+      "answer": "demolish",
+      "translation": "由于担心旧办公楼可能倒塌并摧毁周边建筑，健康与安全专家被请来评估风险。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part1-8",
+      "unit": "U4",
+      "part": "Part 1",
+      "number": 8,
+      "prompt": "The ______ economy after the banking crisis has motivated many people to work in megacities.",
+      "answer": "rebounding",
+      "translation": "银行业危机后复苏的经济，促使许多人前往超大城市工作。",
+      "wordBank": [
+        "allocate",
+        "curtail",
+        "demolish",
+        "disregard",
+        "efficacy",
+        "instill",
+        "rebound",
+        "staple"
+      ],
+      "partAnswers": [
+        "instill",
+        "staple",
+        "curtail",
+        "allocate",
+        "disregard",
+        "efficacy",
+        "demolish",
+        "rebounding"
+      ]
+    },
+    {
+      "id": "U4-Part2-1",
+      "unit": "U4",
+      "part": "Part 2",
+      "number": 1,
+      "prompt": "It's ______ wrong to verbally assault someone with discriminatory statements.",
+      "answer": "blatantly",
+      "translation": "用歧视性言论对他人进行言语攻击，是公然错误的行为。",
+      "wordBank": [
+        "autonomy",
+        "avert",
+        "blatantly",
+        "incentivize",
+        "robust",
+        "incorporate",
+        "transition"
+      ],
+      "partAnswers": [
+        "blatantly",
+        "transition",
+        "avert",
+        "incorporate",
+        "autonomy",
+        "robust",
+        "incentivize"
+      ]
+    },
+    {
+      "id": "U4-Part2-2",
+      "unit": "U4",
+      "part": "Part 2",
+      "number": 2,
+      "prompt": "He repeatedly said developed countries need to contribute significantly more funds to poorer nations to aid their effective ______ to greener economies.",
+      "answer": "transition",
+      "translation": "他反复强调，发达国家需要向较贫穷国家提供更多资金，帮助它们有效向绿色经济转型。",
+      "wordBank": [
+        "autonomy",
+        "avert",
+        "blatantly",
+        "incentivize",
+        "robust",
+        "incorporate",
+        "transition"
+      ],
+      "partAnswers": [
+        "blatantly",
+        "transition",
+        "avert",
+        "incorporate",
+        "autonomy",
+        "robust",
+        "incentivize"
+      ]
+    },
+    {
+      "id": "U4-Part2-3",
+      "unit": "U4",
+      "part": "Part 2",
+      "number": 3,
+      "prompt": "The water supply and sanitation sectors should work more closely together in order to ______ a global water crisis.",
+      "answer": "avert",
+      "translation": "供水与卫生部门应更紧密地合作，以避免一场全球性水危机。",
+      "wordBank": [
+        "autonomy",
+        "avert",
+        "blatantly",
+        "incentivize",
+        "robust",
+        "incorporate",
+        "transition"
+      ],
+      "partAnswers": [
+        "blatantly",
+        "transition",
+        "avert",
+        "incorporate",
+        "autonomy",
+        "robust",
+        "incentivize"
+      ]
+    },
+    {
+      "id": "U4-Part2-4",
+      "unit": "U4",
+      "part": "Part 2",
+      "number": 4,
+      "prompt": "Researchers are just beginning to figure out what remote sensing can and can't do and how to ______ it into global conservation efforts.",
+      "answer": "incorporate",
+      "translation": "研究人员才刚开始了解遥感技术的能力与局限，以及如何将其纳入全球保护工作中。",
+      "wordBank": [
+        "autonomy",
+        "avert",
+        "blatantly",
+        "incentivize",
+        "robust",
+        "incorporate",
+        "transition"
+      ],
+      "partAnswers": [
+        "blatantly",
+        "transition",
+        "avert",
+        "incorporate",
+        "autonomy",
+        "robust",
+        "incentivize"
+      ]
+    },
+    {
+      "id": "U4-Part2-5",
+      "unit": "U4",
+      "part": "Part 2",
+      "number": 5,
+      "prompt": "Increasingly, however, rather than facilitating greater ______ for employees, flexible working created the conditions in which the line between work and private life has become blurred.",
+      "answer": "autonomy",
+      "translation": "然而，弹性工作制非但没有为员工带来更大的自主权，反而逐渐模糊了工作与私人生活的界限。",
+      "wordBank": [
+        "autonomy",
+        "avert",
+        "blatantly",
+        "incentivize",
+        "robust",
+        "incorporate",
+        "transition"
+      ],
+      "partAnswers": [
+        "blatantly",
+        "transition",
+        "avert",
+        "incorporate",
+        "autonomy",
+        "robust",
+        "incentivize"
+      ]
+    },
+    {
+      "id": "U4-Part2-6",
+      "unit": "U4",
+      "part": "Part 2",
+      "number": 6,
+      "prompt": "This wind energy project and others across the country will create ______ and sustainable economies that lift up communities and support good-paying jobs, while also ensuring future generations have a livable planet.",
+      "answer": "robust",
+      "translation": "这个风能项目及全国其他类似项目，将打造强劲且可持续的经济，既能改善社区、提供高薪岗位，也能确保后代拥有宜居的地球。",
+      "wordBank": [
+        "autonomy",
+        "avert",
+        "blatantly",
+        "incentivize",
+        "robust",
+        "incorporate",
+        "transition"
+      ],
+      "partAnswers": [
+        "blatantly",
+        "transition",
+        "avert",
+        "incorporate",
+        "autonomy",
+        "robust",
+        "incentivize"
+      ]
+    },
+    {
+      "id": "U4-Part2-7",
+      "unit": "U4",
+      "part": "Part 2",
+      "number": 7,
+      "prompt": "In a report earlier this year, the panel said that a tariff rate that is too low can ______ countries to lower their rate to remain competitive.",
+      "answer": "incentivize",
+      "translation": "该小组在今年早些时候的一份报告中指出，关税税率过低会激励各国为保持竞争力而进一步降低税率。",
+      "wordBank": [
+        "autonomy",
+        "avert",
+        "blatantly",
+        "incentivize",
+        "robust",
+        "incorporate",
+        "transition"
+      ],
+      "partAnswers": [
+        "blatantly",
+        "transition",
+        "avert",
+        "incorporate",
+        "autonomy",
+        "robust",
+        "incentivize"
+      ]
+    },
+    {
+      "id": "U5-Part1-1",
+      "unit": "U5",
+      "part": "Part 1",
+      "number": 1,
+      "prompt": "______ of biomass argue that the production of energy through biomass offers a sustainable form of energy and reduces the emission of greenhouse gases.",
+      "answer": "proponents",
+      "translation": "生物质能的支持者认为，通过生物质生产能源是一种可持续的能源形式，并且能减少温室气体的排放。",
+      "wordBank": [
+        "adverse",
+        "herald",
+        "inedible",
+        "offset",
+        "proponents",
+        "radiant",
+        "rotate"
+      ],
+      "partAnswers": [
+        "proponents",
+        "adverse",
+        "heralded",
+        "inedible",
+        "radiant",
+        "offset",
+        "rotate"
+      ]
+    },
+    {
+      "id": "U5-Part1-2",
+      "unit": "U5",
+      "part": "Part 1",
+      "number": 2,
+      "prompt": "Some people argue that the ______ effects of the biomass industry far outweigh the potential benefit.",
+      "answer": "adverse",
+      "translation": "有人认为，生物质能产业的不利影响远远超过了其潜在收益。",
+      "wordBank": [
+        "adverse",
+        "herald",
+        "inedible",
+        "offset",
+        "proponents",
+        "radiant",
+        "rotate"
+      ],
+      "partAnswers": [
+        "proponents",
+        "adverse",
+        "heralded",
+        "inedible",
+        "radiant",
+        "offset",
+        "rotate"
+      ]
+    },
+    {
+      "id": "U5-Part1-3",
+      "unit": "U5",
+      "part": "Part 1",
+      "number": 3,
+      "prompt": "The city of Curitiba (库里蒂巴) in Brazil has been ______ as one of the first eco-cities (生态城市).",
+      "answer": "heralded",
+      "translation": "巴西的库里蒂巴市被誉为首批生态城市之一。",
+      "wordBank": [
+        "adverse",
+        "herald",
+        "inedible",
+        "offset",
+        "proponents",
+        "radiant",
+        "rotate"
+      ],
+      "partAnswers": [
+        "proponents",
+        "adverse",
+        "heralded",
+        "inedible",
+        "radiant",
+        "offset",
+        "rotate"
+      ]
+    },
+    {
+      "id": "U5-Part1-4",
+      "unit": "U5",
+      "part": "Part 1",
+      "number": 4,
+      "prompt": "Biomass is arguably an efficient way to utilize ______ agricultural waste.",
+      "answer": "inedible",
+      "translation": "生物质能可以说是利用不可食用的农业废弃物的一种高效方式。",
+      "wordBank": [
+        "adverse",
+        "herald",
+        "inedible",
+        "offset",
+        "proponents",
+        "radiant",
+        "rotate"
+      ],
+      "partAnswers": [
+        "proponents",
+        "adverse",
+        "heralded",
+        "inedible",
+        "radiant",
+        "offset",
+        "rotate"
+      ]
+    },
+    {
+      "id": "U5-Part1-5",
+      "unit": "U5",
+      "part": "Part 1",
+      "number": 5,
+      "prompt": "Solar energy is an alternative energy source that involves harnessing the ______ light energy emitted by the Sun and converting it into thermal or electrical energy.",
+      "answer": "radiant",
+      "translation": "太阳能是一种替代能源，它利用太阳发出的辐射光能，并将其转化为热能或电能。",
+      "wordBank": [
+        "adverse",
+        "herald",
+        "inedible",
+        "offset",
+        "proponents",
+        "radiant",
+        "rotate"
+      ],
+      "partAnswers": [
+        "proponents",
+        "adverse",
+        "heralded",
+        "inedible",
+        "radiant",
+        "offset",
+        "rotate"
+      ]
+    },
+    {
+      "id": "U5-Part1-6",
+      "unit": "U5",
+      "part": "Part 1",
+      "number": 6,
+      "prompt": "New plants cannot be built unless the added emissions are ______ by reductions in pollution from existing facilities in the area.",
+      "answer": "offset",
+      "translation": "除非新增的排放量能被该地区现有设施的污染减少量所抵消，否则不能新建工厂。",
+      "wordBank": [
+        "adverse",
+        "herald",
+        "inedible",
+        "offset",
+        "proponents",
+        "radiant",
+        "rotate"
+      ],
+      "partAnswers": [
+        "proponents",
+        "adverse",
+        "heralded",
+        "inedible",
+        "radiant",
+        "offset",
+        "rotate"
+      ]
+    },
+    {
+      "id": "U5-Part1-7",
+      "unit": "U5",
+      "part": "Part 1",
+      "number": 7,
+      "prompt": "Steam turbines use high-pressure steam to turn generators at incredibly high speeds, so they ______ much faster than either wind or water turbines.",
+      "answer": "rotate",
+      "translation": "蒸汽轮机利用高压蒸汽驱动发电机以极高的速度运转，因此它们的转速远快于风力或水力涡轮机。",
+      "wordBank": [
+        "adverse",
+        "herald",
+        "inedible",
+        "offset",
+        "proponents",
+        "radiant",
+        "rotate"
+      ],
+      "partAnswers": [
+        "proponents",
+        "adverse",
+        "heralded",
+        "inedible",
+        "radiant",
+        "offset",
+        "rotate"
+      ]
+    },
+    {
+      "id": "U5-Part2-1",
+      "unit": "U5",
+      "part": "Part 2",
+      "number": 1,
+      "prompt": "It is estimated that fracking is responsible for some earthquakes with a(n) ______ of less than 2.0 on the Richter scale.",
+      "answer": "magnitude",
+      "translation": "据估计，水力压裂导致了一些里氏震级小于 2.0 的地震。",
+      "wordBank": [
+        "additive",
+        "extraction",
+        "extrapolate",
+        "magnitude",
+        "sedimentary",
+        "sequester",
+        "untapped"
+      ],
+      "partAnswers": [
+        "magnitude",
+        "extract",
+        "additives",
+        "extrapolate",
+        "untapped",
+        "sequestering",
+        "sedimentary"
+      ]
+    },
+    {
+      "id": "U5-Part2-2",
+      "unit": "U5",
+      "part": "Part 2",
+      "number": 2,
+      "prompt": "Recent technologies have made it possible to ______ more natural gas from deep underground shale formations, but environmental concerns have been raised.",
+      "answer": "extract",
+      "translation": "新技术使得从深层地下页岩地层中开采更多天然气成为可能，但也引发了环境担忧。",
+      "wordBank": [
+        "additive",
+        "extraction",
+        "extrapolate",
+        "magnitude",
+        "sedimentary",
+        "sequester",
+        "untapped"
+      ],
+      "partAnswers": [
+        "magnitude",
+        "extract",
+        "additives",
+        "extrapolate",
+        "untapped",
+        "sequestering",
+        "sedimentary"
+      ]
+    },
+    {
+      "id": "U5-Part2-3",
+      "unit": "U5",
+      "part": "Part 2",
+      "number": 3,
+      "prompt": "The chemical ______ in fracking solution include hydrochloric acid and sodium chloride.",
+      "answer": "additives",
+      "translation": "水力压裂液中的化学添加剂包括盐酸和氯化钠。",
+      "wordBank": [
+        "additive",
+        "extraction",
+        "extrapolate",
+        "magnitude",
+        "sedimentary",
+        "sequester",
+        "untapped"
+      ],
+      "partAnswers": [
+        "magnitude",
+        "extract",
+        "additives",
+        "extrapolate",
+        "untapped",
+        "sequestering",
+        "sedimentary"
+      ]
+    },
+    {
+      "id": "U5-Part2-4",
+      "unit": "U5",
+      "part": "Part 2",
+      "number": 4,
+      "prompt": "It is possible to ______ these outcomes directly from the trial, without the need to use external data.",
+      "answer": "extrapolate",
+      "translation": "无需使用外部数据，就可以直接从试验中推断出这些结果。",
+      "wordBank": [
+        "additive",
+        "extraction",
+        "extrapolate",
+        "magnitude",
+        "sedimentary",
+        "sequester",
+        "untapped"
+      ],
+      "partAnswers": [
+        "magnitude",
+        "extract",
+        "additives",
+        "extrapolate",
+        "untapped",
+        "sequestering",
+        "sedimentary"
+      ]
+    },
+    {
+      "id": "U5-Part2-5",
+      "unit": "U5",
+      "part": "Part 2",
+      "number": 5,
+      "prompt": "Wind power is one of the ______ renewable energy resources in some countries which requires government and private participation to harness it.",
+      "answer": "untapped",
+      "translation": "在一些国家，风能是一种未开发的可再生能源，需要政府和民间的参与来加以利用。",
+      "wordBank": [
+        "additive",
+        "extraction",
+        "extrapolate",
+        "magnitude",
+        "sedimentary",
+        "sequester",
+        "untapped"
+      ],
+      "partAnswers": [
+        "magnitude",
+        "extract",
+        "additives",
+        "extrapolate",
+        "untapped",
+        "sequestering",
+        "sedimentary"
+      ]
+    },
+    {
+      "id": "U5-Part2-6",
+      "unit": "U5",
+      "part": "Part 2",
+      "number": 6,
+      "prompt": "Foreseeing the continued use of fossil fuels, engineers have explored methods of capturing the carbon dioxide produced from fuel burning and ______ it underground.",
+      "answer": "sequestering",
+      "translation": "考虑到化石燃料的持续使用，工程师们探索了捕获燃料燃烧产生的二氧化碳并将其封存于地下的方法。",
+      "wordBank": [
+        "additive",
+        "extraction",
+        "extrapolate",
+        "magnitude",
+        "sedimentary",
+        "sequester",
+        "untapped"
+      ],
+      "partAnswers": [
+        "magnitude",
+        "extract",
+        "additives",
+        "extrapolate",
+        "untapped",
+        "sequestering",
+        "sedimentary"
+      ]
+    },
+    {
+      "id": "U5-Part2-7",
+      "unit": "U5",
+      "part": "Part 2",
+      "number": 7,
+      "prompt": "______ rocks, formed from the compression (压缩) of ocean sediments or other processes, have been used extensively as building materials in civil engineering projects.",
+      "answer": "sedimentary",
+      "translation": "沉积岩由海洋沉积物的压缩或其他过程形成，已被广泛用作土木工程的建筑材料。",
+      "wordBank": [
+        "additive",
+        "extraction",
+        "extrapolate",
+        "magnitude",
+        "sedimentary",
+        "sequester",
+        "untapped"
+      ],
+      "partAnswers": [
+        "magnitude",
+        "extract",
+        "additives",
+        "extrapolate",
+        "untapped",
+        "sequestering",
+        "sedimentary"
+      ]
+    },
+    {
+      "id": "U6-Part1-1",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 1,
+      "prompt": "It is encouraged to create an environment ______ to research and development that fights against disease, hunger and poor sanitation.",
+      "answer": "conducive",
+      "translation": "我们鼓励创造一个有利于研发的环境，以对抗疾病、饥饿和卫生条件差的问题。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part1-2",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 2,
+      "prompt": "Various mechanisms of drafting guidelines are discussed which link well to the methods of ______ that may be used in their assessment.",
+      "answer": "appraisal",
+      "translation": "文中讨论了制定指南的各种机制，这些机制与评估中可能使用的评价方法密切相关。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part1-3",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 3,
+      "prompt": "Despite three days of open discussion, the group was unable to reach an acceptable ______.",
+      "answer": "consensus",
+      "translation": "尽管进行了三天的公开讨论，该小组仍未能达成可接受的共识。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part1-4",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 4,
+      "prompt": "Reporting in that place is ______ difficult: Local people are isolated and struggling with access to the Internet.",
+      "answer": "notoriously",
+      "translation": "在那个地方进行报道众所周知地困难：当地人与世隔绝，且难以接入互联网。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part1-5",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 5,
+      "prompt": "He uses the opportunity to employ scientific and mathematical methods to ______ belief in the supernatural.",
+      "answer": "discredit",
+      "translation": "他利用这个机会，运用科学和数学方法来质疑对超自然力量的信仰。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part1-6",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 6,
+      "prompt": "Using a sample of 300 consumers’ responses to offline and online banking, this test has provided new ______ evidence that trust in an offline bank can influence perceptions of its online bank.",
+      "answer": "empirical",
+      "translation": "通过对 300 名消费者线下和线上银行服务的反馈抽样调查，该测试提供了新的经验性证据，表明对线下银行的信任会影响人们对其线上银行的看法。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part1-7",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 7,
+      "prompt": "Settlements of boundaries between villages were by all accounts tremendously ______ issues.",
+      "answer": "contentious",
+      "translation": "据各方说法，村庄之间的边界划分是极具争议性的问题。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part1-8",
+      "unit": "U6",
+      "part": "Part 1",
+      "number": 8,
+      "prompt": "During the product development period, the vision of the product should sometimes ______ the feasibility analysis and market assessment of the product.",
+      "answer": "override",
+      "translation": "在产品开发阶段，产品愿景有时需要优先于可行性分析和市场评估。",
+      "wordBank": [
+        "appraisal",
+        "conducive",
+        "consensus",
+        "contentious",
+        "discredit",
+        "empirical",
+        "notoriously",
+        "override"
+      ],
+      "partAnswers": [
+        "conducive",
+        "appraisal",
+        "consensus",
+        "notoriously",
+        "discredit",
+        "empirical",
+        "contentious",
+        "override"
+      ]
+    },
+    {
+      "id": "U6-Part2-1",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 1,
+      "prompt": "A neutral third party is often required to ______ potentially confrontational discussion.",
+      "answer": "mediate",
+      "translation": "通常需要一个中立的第三方来调解潜在具有对抗性的讨论。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    },
+    {
+      "id": "U6-Part2-2",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 2,
+      "prompt": "Managers may rely on emotional reactions to a setting to the ______ of economic considerations, resulting in decisions that are costly for firms.",
+      "answer": "detriment",
+      "translation": "管理者可能会依赖对情境的情绪反应，而忽视 / 损害经济考量，这会做出对公司而言成本高昂的决策。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    },
+    {
+      "id": "U6-Part2-3",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 3,
+      "prompt": "It is impossible for a team to keep achieving ______ performance without occasional conflict.",
+      "answer": "optimum",
+      "translation": "一个团队若没有偶尔的冲突，就不可能持续取得最佳绩效。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    },
+    {
+      "id": "U6-Part2-4",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 4,
+      "prompt": "The vast majority of the countries in the world are represented here and want to see an open and inclusive process ______ in the months ahead.",
+      "answer": "unfold",
+      "translation": "世界上绝大多数国家都派代表出席，希望看到一个开放、包容的进程在未来几个月逐步推进。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    },
+    {
+      "id": "U6-Part2-5",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 5,
+      "prompt": "Smaller companies’ stocks generally have ______ those of larger companies in the past several years.",
+      "answer": "underperformed",
+      "translation": "过去几年，小公司的股票表现普遍不及大公司的股票。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    },
+    {
+      "id": "U6-Part2-6",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 6,
+      "prompt": "The empirical results indicate that family firms devote less capital to long-term investments than firms with ______ ownership structures.",
+      "answer": "diffuse",
+      "translation": "实证结果表明，家族企业对长期投资的投入少于具有分散式所有权结构的企业。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    },
+    {
+      "id": "U6-Part2-7",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 7,
+      "prompt": "The ______ theories of context and creativity all emphasize that context influences creativity at the individual, group, and organization levels.",
+      "answer": "predominant",
+      "translation": "关于环境与创造力的主流理论都强调，环境会在个人、团队和组织层面影响创造力。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    },
+    {
+      "id": "U6-Part2-8",
+      "unit": "U6",
+      "part": "Part 2",
+      "number": 8,
+      "prompt": "Many scientists presume that technology develops in a(n) ______ way, and is beyond human, social, or governmental control.",
+      "answer": "autonomous",
+      "translation": "许多科学家认为，技术以一种自主的方式发展，超出了人类、社会或政府的控制。",
+      "wordBank": [
+        "autonomous",
+        "detriment",
+        "diffuse",
+        "mediate",
+        "optimum",
+        "predominant",
+        "underperform",
+        "unfold"
+      ],
+      "partAnswers": [
+        "mediate",
+        "detriment",
+        "optimum",
+        "unfold",
+        "underperformed",
+        "diffuse",
+        "predominant",
+        "autonomous"
+      ]
+    }
+  ]
+}</script>
+  <script>
+    const DATA = JSON.parse(document.getElementById('quiz-data').textContent);
+    const state = {
+      mode: 'unit',
+      unit: 'U4',
+      part: 'all',
+      queue: [],
+      index: 0,
+      done: 0,
+      right: 0,
+      answered: false,
+      selectedAnswer: '',
+      wrong: [],
+      optionPool: [],
+      currentOptions: []
+    };
+
+    const els = {
+      doneCount: document.getElementById('doneCount'),
+      rightCount: document.getElementById('rightCount'),
+      accuracy: document.getElementById('accuracy'),
+      unitControls: document.getElementById('unitControls'),
+      poolInfo: document.getElementById('poolInfo'),
+      startBtn: document.getElementById('startBtn'),
+      wrongOnlyBtn: document.getElementById('wrongOnlyBtn'),
+      sourcePill: document.getElementById('sourcePill'),
+      indexPill: document.getElementById('indexPill'),
+      progressFill: document.getElementById('progressFill'),
+      questionText: document.getElementById('questionText'),
+      wordBank: document.getElementById('wordBank'),
+      options: document.getElementById('options'),
+      feedback: document.getElementById('feedback'),
+      feedbackTitle: document.getElementById('feedbackTitle'),
+      answerLine: document.getElementById('answerLine'),
+      translationLine: document.getElementById('translationLine'),
+      nextBtn: document.getElementById('nextBtn'),
+      skipBtn: document.getElementById('skipBtn'),
+      quizView: document.getElementById('quizView'),
+      summaryView: document.getElementById('summaryView'),
+      summaryText: document.getElementById('summaryText'),
+      wrongList: document.getElementById('wrongList'),
+      againBtn: document.getElementById('againBtn'),
+      reviewWrongBtn: document.getElementById('reviewWrongBtn')
+    };
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function getPool() {
+      return DATA.questions.filter(q => {
+        const unitOk = state.mode === 'all' || q.unit === state.unit;
+        const partOk = state.part === 'all' || q.part === state.part;
+        return unitOk && partOk;
+      });
+    }
+
+    function setActive(groupSelector, attr, value) {
+      document.querySelectorAll(groupSelector).forEach(button => {
+        button.classList.toggle('active', button.dataset[attr] === value);
+      });
+    }
+
+    function updatePoolInfo() {
+      const count = getPool().length;
+      const range = state.mode === 'all' ? '全部题库' : state.unit;
+      const part = state.part === 'all' ? '全部题型' : state.part;
+      els.poolInfo.textContent = `当前范围：${range} · ${part} · ${count} 题`;
+      els.unitControls.classList.toggle('hidden', state.mode === 'all');
+    }
+
+    function startRound(customPool = null) {
+      const pool = customPool || getPool();
+      state.optionPool = getPool();
+      state.queue = shuffle(pool);
+      state.index = 0;
+      state.done = 0;
+      state.right = 0;
+      state.answered = false;
+      state.selectedAnswer = '';
+      state.wrong = customPool ? state.wrong : [];
+      els.quizView.classList.remove('hidden');
+      els.summaryView.classList.remove('show');
+      els.reviewWrongBtn.classList.add('hidden');
+      renderStats();
+      renderQuestion();
+    }
+
+    function renderStats() {
+      els.doneCount.textContent = state.done;
+      els.rightCount.textContent = state.right;
+      els.accuracy.textContent = state.done ? `${Math.round((state.right / state.done) * 100)}%` : '0%';
+      els.wrongOnlyBtn.classList.toggle('hidden', state.wrong.length === 0);
+    }
+
+    function blankPrompt(text, answer = '') {
+      const safeAnswer = answer ? answer : '&nbsp;';
+      return text.replace('______', `<span class="blank">${safeAnswer}</span>`);
+    }
+
+    function renderQuestion() {
+      if (!state.queue.length || state.index >= state.queue.length) {
+        showSummary();
+        return;
+      }
+      const q = state.queue[state.index];
+      state.answered = false;
+      state.selectedAnswer = '';
+      state.currentOptions = shuffle(unique(state.optionPool.map(item => item.answer)));
+      els.sourcePill.textContent = `${q.unit} · ${q.part}`;
+      els.indexPill.textContent = `${state.index + 1} / ${state.queue.length}`;
+      els.progressFill.style.width = `${(state.index / state.queue.length) * 100}%`;
+      els.questionText.innerHTML = blankPrompt(q.prompt);
+      els.wordBank.innerHTML = q.wordBank.map(word => `<span class="word">${escapeHtml(word)}</span>`).join('');
+      els.options.innerHTML = state.currentOptions.map(option => (
+        `<button class="option" data-answer="${escapeAttr(option)}">${escapeHtml(option)}</button>`
+      )).join('');
+      els.feedback.className = 'feedback';
+      els.feedbackTitle.textContent = '';
+      els.answerLine.textContent = '';
+      els.translationLine.textContent = '';
+      els.nextBtn.disabled = true;
+      els.nextBtn.textContent = '确认答案';
+      els.skipBtn.disabled = false;
+    }
+
+    function selectAnswer(answer) {
+      if (state.answered) return;
+      state.selectedAnswer = answer;
+      document.querySelectorAll('.option').forEach(button => {
+        button.classList.toggle('selected', button.dataset.answer === answer);
+      });
+      els.nextBtn.disabled = false;
+    }
+
+    function confirmAnswer() {
+      if (state.answered || !state.selectedAnswer) return;
+      const q = state.queue[state.index];
+      const correct = state.selectedAnswer === q.answer;
+      state.answered = true;
+      state.done += 1;
+      if (correct) {
+        state.right += 1;
+      } else {
+        state.wrong.push(q);
+      }
+
+      document.querySelectorAll('.option').forEach(button => {
+        const value = button.dataset.answer;
+        button.disabled = true;
+        if (value === q.answer) button.classList.add('correct');
+        if (value === state.selectedAnswer && value !== q.answer) button.classList.add('wrong');
+      });
+
+      els.questionText.innerHTML = blankPrompt(q.prompt, q.answer);
+      els.feedback.className = `feedback show ${correct ? 'good' : 'bad'}`;
+      els.feedbackTitle.textContent = correct ? '回答正确' : '回答错误';
+      els.answerLine.innerHTML = `正确答案：<strong>${escapeHtml(q.answer)}</strong>`;
+      els.translationLine.textContent = `中文翻译：${q.translation}`;
+      els.nextBtn.disabled = false;
+      els.nextBtn.textContent = '下一题';
+      els.skipBtn.disabled = true;
+      els.progressFill.style.width = `${((state.index + 1) / state.queue.length) * 100}%`;
+      renderStats();
+    }
+
+    function skip() {
+      if (state.answered) return;
+      state.index += 1;
+      renderQuestion();
+    }
+
+    function next() {
+      state.index += 1;
+      renderQuestion();
+    }
+
+    function confirmOrNext() {
+      if (state.answered) {
+        next();
+      } else {
+        confirmAnswer();
+      }
+    }
+
+    function showSummary() {
+      els.quizView.classList.add('hidden');
+      els.summaryView.classList.add('show');
+      els.progressFill.style.width = '100%';
+      const total = state.done;
+      const rate = total ? Math.round((state.right / total) * 100) : 0;
+      els.summaryText.textContent = `答题 ${total} 道，正确 ${state.right} 道，正确率 ${rate}%。`;
+      els.wrongList.innerHTML = state.wrong.length
+        ? state.wrong.map(q => `
+          <div class="wrong-item">
+            <p><b>${q.unit} · ${q.part} · 第 ${q.number} 题</b></p>
+            <p>${escapeHtml(q.prompt)}</p>
+            <p>答案：<strong>${escapeHtml(q.answer)}</strong></p>
+            <p>${escapeHtml(q.translation)}</p>
+          </div>
+        `).join('')
+        : '<div class="wrong-item"><strong>没有错题，本轮很稳。</strong></div>';
+      els.reviewWrongBtn.classList.toggle('hidden', state.wrong.length === 0);
+      els.wrongOnlyBtn.classList.toggle('hidden', state.wrong.length === 0);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replaceAll('`', '&#096;');
+    }
+
+    function unique(items) {
+      return [...new Set(items)];
+    }
+
+    document.querySelectorAll('[data-mode]').forEach(button => {
+      button.addEventListener('click', () => {
+        state.mode = button.dataset.mode;
+        setActive('[data-mode]', 'mode', state.mode);
+        updatePoolInfo();
+        startRound();
+      });
+    });
+
+    document.querySelectorAll('[data-unit]').forEach(button => {
+      button.addEventListener('click', () => {
+        state.unit = button.dataset.unit;
+        setActive('[data-unit]', 'unit', state.unit);
+        updatePoolInfo();
+        startRound();
+      });
+    });
+
+    document.querySelectorAll('[data-part]').forEach(button => {
+      button.addEventListener('click', () => {
+        state.part = button.dataset.part;
+        setActive('[data-part]', 'part', state.part);
+        updatePoolInfo();
+        startRound();
+      });
+    });
+
+    els.startBtn.addEventListener('click', () => startRound());
+    els.againBtn.addEventListener('click', () => startRound());
+    els.wrongOnlyBtn.addEventListener('click', () => startRound(state.wrong));
+    els.reviewWrongBtn.addEventListener('click', () => startRound(state.wrong));
+    els.nextBtn.addEventListener('click', confirmOrNext);
+    els.skipBtn.addEventListener('click', skip);
+    els.options.addEventListener('click', event => {
+      const button = event.target.closest('.option');
+      if (button) selectAnswer(button.dataset.answer);
+    });
+
+    document.addEventListener('keydown', event => {
+      if (/^[1-9]$/.test(event.key) && !state.answered) {
+        const index = Number(event.key) - 1;
+        const option = document.querySelectorAll('.option')[index];
+        if (option) option.click();
+      }
+      if (event.key === 'Enter' && state.answered) next();
+    });
+
+    updatePoolInfo();
+    startRound();
+  </script>
+</body>
+</html>
